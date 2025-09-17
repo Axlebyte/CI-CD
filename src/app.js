@@ -6,7 +6,7 @@ app.get('/health', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-  res.send('This is my CI/CD project! UA92');
+  res.send('This is Taylors render site!');
 });
 
 module.exports = app;
