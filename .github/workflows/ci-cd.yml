@@ -76,7 +76,7 @@ jobs:
           for i in {1..40}; do
             code=$(curl -sS -m 5 -o /dev/null -w "%{http_code}" "$SMOKE_URL/health" || true)
             if [ "$code" = "200" ]; then
-              echo "✅ Healthy"
+              echo "✅ Healthy. Sorted"
               exit 0
             fi
             echo "Attempt $i: HTTP $code"
