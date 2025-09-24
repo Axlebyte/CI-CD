@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Taylor's Mini To‑Do</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Mini To‑Do ✅</h1>
+    <p class="sub">Add items • mark complete • multiple lists</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Lists</h2>
+      <div class="row">
+        <input id="newListName" placeholder="New list name…" />
+        <button id="addListBtn">Add List</button>
+      </div>
+      <ul id="lists"></ul>
+    </section>
+
+    <section class="panel">
+      <h2 id="todosTitle">Todos</h2>
+      <div class="row">
+        <input id="newTodoText" placeholder="What needs doing?" />
+        <button id="addTodoBtn">Add</button>
+      </div>
+      <ul id="todos"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <a href="/health" target="_blank">Health</a>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
