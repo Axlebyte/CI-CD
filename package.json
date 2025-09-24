@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "express": "^4.19.2"
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.35.0",
