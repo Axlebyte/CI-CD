@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: mini-todo-vibecode   # you can change the name if you like
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: false # we deploy via GitHub Actions using the deploy hook
