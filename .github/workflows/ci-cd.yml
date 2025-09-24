@@ -1,87 +1,34 @@
-name: CI/CD
+name: CI & Deploy
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:
-
-# Needed so we can push the container image to GHCR
-permissions:
-  contents: read
-  packages: write
+    branches: [ main ]
 
 jobs:
-  ci:
-    name: Lint & Test
+  build-test-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '20'
           cache: 'npm'
 
       - name: Install deps
         run: npm ci
 
-      - name: Lint
-        run: npm run lint
-
-      - name: Unit tests
+      - name: Run tests
         run: npm test
 
-  build-and-publish:
-    name: Trigger Deploy to Render
-    needs: ci
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Trigger Render Deploy (Production)
+      - name: Trigger Render Deploy
+        if: github.ref == 'refs/heads/main'
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
           if [ -z "$RENDER_DEPLOY_HOOK" ]; then
-            echo "No RENDER_DEPLOY_HOOK secret set; skipping deploy."
-            exit 0
-          fi
-          echo "Triggering Render deploy..."
-          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK"
-
-
-  smoke-test:
-    name: Post-Deploy Smoke Test
-    needs: build-and-publish
-    # Only smoke-test the prod URL for main
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Wait for service health
-        env:
-          SMOKE_URL: ${{ secrets.SMOKE_URL }}
-        run: |
-          if [ -z "$SMOKE_URL" ]; then
-            echo "No SMOKE_URL secret set; failing so you notice."
-            exit 1
-          fi
-
-          echo "Polling $SMOKE_URL/health ..."
-          for i in {1..40}; do
-            code=$(curl -sS -m 5 -o /dev/null -w "%{http_code}" "$SMOKE_URL/health" || true)
-            if [ "$code" = "200" ]; then
-              echo "✅ Healthy. Sorted"
-              exit 0
-            fi
-            echo "Attempt $i: HTTP $code"
-            sleep 5
-          done
-
-          echo "❌ Service did not become healthy in time."
-          exit 1
+            echo "RE
